@@ -1,2 +1,300 @@
 databaseChangeLog:
-  - 
+  - changeSet:
+      id: 1
+      author: ahmed
+      changes:
+        # Table MyUser (aucune dépendance)
+        - createTable:
+            tableName: my_user
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: nom
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: tel
+                  type: varchar(255)
+              - column:
+                  name: cv_file
+                  type: varchar(255)
+              - column:
+                  name: est_valide
+                  type: boolean
+              - column:
+                  name: adresse
+                  type: varchar(255)
+              - column:
+                  name: role
+                  type: varchar(255)
+
+        # Table Categorie (aucune dépendance)
+        - createTable:
+            tableName: categorie
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: titre
+                  type: varchar(255)
+
+        # Table TypeAbonnement (aucune dépendance)
+        - createTable:
+            tableName: type_abonnement
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: type
+                  type: varchar(255)
+
+  - changeSet:
+      id: 2
+      author: ahmed
+      changes:
+        # Table Offre (dépend de Categorie et MyUser)
+        - createTable:
+            tableName: offre
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: ville
+                  type: varchar(255)
+              - column:
+                  name: date_publication
+                  type: timestamp
+              - column:
+                  name: date_expiration
+                  type: timestamp
+              - column:
+                  name: salaire
+                  type: float
+              - column:
+                  name: competence_exigee
+                  type: varchar(255)
+              - column:
+                  name: categorie_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_offre_categorie
+                    references: categorie(id)
+              - column:
+                  name: publie_par_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_offre_my_user
+                    references: my_user(id)
+
+        # Table Abonnement (dépend de MyUser et TypeAbonnement)
+        - createTable:
+            tableName: abonnement
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: date_debut
+                  type: timestamp
+              - column:
+                  name: date_fin
+                  type: timestamp
+              - column:
+                  name: statut
+                  type: varchar(255)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_abonnement_my_user
+                    references: my_user(id)
+              - column:
+                  name: type_abonnement_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_abonnement_type_abonnement
+                    references: type_abonnement(id)
+
+  - changeSet:
+      id: 3
+      author: ahmed
+      changes:
+        # Table Notification (dépend de MyUser)
+        - createTable:
+            tableName: notification
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: message
+                  type: varchar(255)
+              - column:
+                  name: date_envoie
+                  type: timestamp
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_notification_my_user
+                    references: my_user(id)
+
+        # Table Favoris (dépend de MyUser et Offre)
+        - createTable:
+            tableName: favoris
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: date_ajout
+                  type: timestamp
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favoris_my_user
+                    references: my_user(id)
+              - column:
+                  name: offre_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favoris_offre
+                    references: offre(id)
+
+        # Table Candidature (dépend de MyUser et Offre)
+        - createTable:
+            tableName: candidature
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: date_de_candidature
+                  type: timestamp
+              - column:
+                  name: statut
+                  type: varchar(255)
+              - column:
+                  name: lettre_de_motivation
+                  type: varchar(255)
+              - column:
+                  name: cv_choisi
+                  type: varchar(255)
+              - column:
+                  name: commentaires
+                  type: varchar(255)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_candidature_my_user
+                    references: my_user(id)
+              - column:
+                  name: offre_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_candidature_offre
+                    references: offre(id)
+
+        # Table NotesOffre (dépend de MyUser et Offre)
+        - createTable:
+            tableName: notes_offre
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: avis
+                  type: varchar(255)
+              - column:
+                  name: offre_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_notes_offre_offre
+                    references: offre(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_notes_offre_my_user
+                    references: my_user(id)
+
+  - changeSet:
+      id: 4
+      author: ahmed
+      changes:
+        # Table PaiementAbonnement (dépend de Abonnement)
+        - createTable:
+            tableName: paiement_abonnement
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: montant
+                  type: float
+              - column:
+                  name: date_de_paiement
+                  type: timestamp
+              - column:
+                  name: abonnement_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_paiement_abonnement_abonnement
+                    references: abonnement(id)
