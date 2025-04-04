@@ -13,7 +13,7 @@ public class AbonnementDTO {
     private Long id;
     private LocalDateTime dateDebut;
     private LocalDateTime dateFin;
-    private String statut;
+    private String statutAbonnement;
     private Long userId;
     private Long typeAbonnementId;
     private List<Long> paiementIds;

@@ -13,6 +13,7 @@ public class OffreDTO {
     private Long id;
     private String description;
     private String ville;
+    private String titre;
     private LocalDateTime datePublication;
     private LocalDateTime dateExpiration;
     private float salaire;

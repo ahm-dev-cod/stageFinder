@@ -14,10 +14,12 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique = true)
     private String nom;
+    @Column(unique = true)
     private String email;
     private String password;
+    @Column(unique = true)
     private String tel;
 
     @Column(name = "cv_file")
@@ -45,4 +47,7 @@ public class MyUser {
 
     @OneToMany(mappedBy = "publiePar")
     private List<Offre> offresPubliees;
+
+    @OneToMany(mappedBy = "user")
+    private List<NotesOffre> notesOffres;
 }
