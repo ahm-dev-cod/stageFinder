@@ -45,4 +45,7 @@ public class MyUser {
 
     @OneToMany(mappedBy = "publiePar")
     private List<Offre> offresPubliees;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Token> tokens;
+
 }
