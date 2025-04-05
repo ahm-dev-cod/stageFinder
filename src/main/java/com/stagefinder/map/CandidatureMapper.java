@@ -2,7 +2,7 @@ package com.stagefinder.map;
 
 import com.stagefinder.dto.CandidatureDTO;
 import com.stagefinder.entities.Candidature;
-import com.stagefinder.entities.enums.Statut;
+// import com.stagefinder.entities.enums.Statut; // Import inutile, peut être supprimé
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,6 +16,6 @@ public interface CandidatureMapper {
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "offre", ignore = true)
-    @Mapping(target = "statut", expression = "java(Statut.valueOf(dto.getStatut()))")
+    @Mapping(target = "statut", expression = "java(com.stagefinder.entities.enums.Statut.valueOf(dto.getStatut()))")
     Candidature toEntity(CandidatureDTO dto);
 }

@@ -6,6 +6,7 @@ databaseChangeLog:
         # Table MyUser (aucune dépendance)
         - createTable:
             tableName: my_user
+            remarks: Table pour stocker les utilisateurs
             columns:
               - column:
                   name: id
@@ -19,6 +20,8 @@ databaseChangeLog:
               - column:
                   name: email
                   type: varchar(255)
+                  constraints:
+                    unique: true
               - column:
                   name: password
                   type: varchar(255)
@@ -31,6 +34,7 @@ databaseChangeLog:
               - column:
                   name: est_valide
                   type: boolean
+                  defaultValueBoolean: false
               - column:
                   name: adresse
                   type: varchar(255)
@@ -84,6 +88,9 @@ databaseChangeLog:
                   name: description
                   type: varchar(255)
               - column:
+                  name: titre
+                  type: varchar(255)
+              - column:
                   name: ville
                   type: varchar(255)
               - column:
@@ -102,16 +109,28 @@ databaseChangeLog:
                   name: categorie_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_offre_categorie
                     references: categorie(id)
               - column:
                   name: publie_par_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_offre_my_user
                     references: my_user(id)
+
+        # Index pour les clés étrangères dans Offre
+        - createIndex:
+            tableName: offre
+            columns:
+              - column:
+                  name: categorie_id
+        - createIndex:
+            tableName: offre
+            columns:
+              - column:
+                  name: publie_par_id
 
         # Table Abonnement (dépend de MyUser et TypeAbonnement)
         - createTable:
@@ -130,22 +149,34 @@ databaseChangeLog:
                   name: date_fin
                   type: timestamp
               - column:
-                  name: statut
+                  name: statut_abonnement # Renommé de statut à statut_abonnement
                   type: varchar(255)
               - column:
                   name: user_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_abonnement_my_user
                     references: my_user(id)
               - column:
                   name: type_abonnement_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_abonnement_type_abonnement
                     references: type_abonnement(id)
+
+        # Index pour les clés étrangères dans Abonnement
+        - createIndex:
+            tableName: abonnement
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: abonnement
+            columns:
+              - column:
+                  name: type_abonnement_id
 
   - changeSet:
       id: 3
@@ -171,9 +202,16 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_notification_my_user
                     references: my_user(id)
+
+        # Index pour la clé étrangère dans Notification
+        - createIndex:
+            tableName: notification
+            columns:
+              - column:
+                  name: user_id
 
         # Table Favoris (dépend de MyUser et Offre)
         - createTable:
@@ -192,16 +230,28 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_favoris_my_user
                     references: my_user(id)
               - column:
                   name: offre_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_favoris_offre
                     references: offre(id)
+
+        # Index pour les clés étrangères dans Favoris
+        - createIndex:
+            tableName: favoris
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: favoris
+            columns:
+              - column:
+                  name: offre_id
 
         # Table Candidature (dépend de MyUser et Offre)
         - createTable:
@@ -232,16 +282,28 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_candidature_my_user
                     references: my_user(id)
               - column:
                   name: offre_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_candidature_offre
                     references: offre(id)
+
+        # Index pour les clés étrangères dans Candidature
+        - createIndex:
+            tableName: candidature
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: candidature
+            columns:
+              - column:
+                  name: offre_id
 
         # Table NotesOffre (dépend de MyUser et Offre)
         - createTable:
@@ -257,19 +319,36 @@ databaseChangeLog:
                   name: avis
                   type: varchar(255)
               - column:
+                  name: note
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
                   name: offre_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_notes_offre_offre
                     references: offre(id)
               - column:
                   name: user_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_notes_offre_my_user
                     references: my_user(id)
+
+        # Index pour les clés étrangères dans NotesOffre
+        - createIndex:
+            tableName: notes_offre
+            columns:
+              - column:
+                  name: offre_id
+        - createIndex:
+            tableName: notes_offre
+            columns:
+              - column:
+                  name: user_id
 
   - changeSet:
       id: 4
@@ -295,6 +374,13 @@ databaseChangeLog:
                   name: abonnement_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_paiement_abonnement_abonnement
                     references: abonnement(id)
+
+        # Index pour la clé étrangère dans PaiementAbonnement
+        - createIndex:
+            tableName: paiement_abonnement
+            columns:
+              - column:
+                  name: abonnement_id

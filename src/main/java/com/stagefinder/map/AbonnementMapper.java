@@ -2,7 +2,7 @@ package com.stagefinder.map;
 
 import com.stagefinder.dto.AbonnementDTO;
 import com.stagefinder.entities.Abonnement;
-import com.stagefinder.entities.enums.StatutAbonnement;
+// import com.stagefinder.entities.enums.StatutAbonnement; // Import inutile, peut être supprimé
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,6 +18,6 @@ public interface AbonnementMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "typeAbonnement", ignore = true)
     @Mapping(target = "paiements", ignore = true)
-    @Mapping(target = "statutAbonnement", expression = "java(StatutAbonnement.valueOf(dto.getStatutAbonnement()))")
+    @Mapping(target = "statutAbonnement", expression = "java(com.stagefinder.entities.enums.StatutAbonnement.valueOf(dto.getStatutAbonnement()))")
     Abonnement toEntity(AbonnementDTO dto);
 }

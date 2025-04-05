@@ -15,6 +15,7 @@ public class NotesOffre {
     private Long id;
 
     private String avis;
+    @Column(nullable = true)
     private int note;
 
     @ManyToOne

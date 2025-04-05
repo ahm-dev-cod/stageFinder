@@ -2,15 +2,13 @@ package com.stagefinder.map;
 
 import com.stagefinder.dto.MyUserDTO;
 import com.stagefinder.entities.MyUser;
-import com.stagefinder.entities.enums.Role;
+// import com.stagefinder.entities.enums.Role; // Supprimer cet import
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MyUserMapper {
 
-    // Les champs nom, email, tel, cvFile, estValide, et adresse sont mappés automatiquement
-    // car ils ont les mêmes noms et types dans MyUser et MyUserDTO
     @Mapping(target = "candidatureIds", expression = "java(user.getCandidatures().stream().map(com.stagefinder.entities.Candidature::getId).toList())")
     @Mapping(target = "notificationIds", expression = "java(user.getNotifications().stream().map(com.stagefinder.entities.Notification::getId).toList())")
     @Mapping(target = "favorisIds", expression = "java(user.getFavoris().stream().map(com.stagefinder.entities.Favoris::getId).toList())")
@@ -20,8 +18,7 @@ public interface MyUserMapper {
     @Mapping(target = "role", expression = "java(user.getRole().name())")
     MyUserDTO toDto(MyUser user);
 
-    // Les champs nom, email, tel, cvFile, estValide, et adresse sont mappés automatiquement
-    @Mapping(target = "role", expression = "java(Role.valueOf(dto.getRole()))")
+    @Mapping(target = "role", expression = "java(com.stagefinder.entities.enums.Role.valueOf(dto.getRole()))")
     @Mapping(target = "candidatures", ignore = true)
     @Mapping(target = "notifications", ignore = true)
     @Mapping(target = "favoris", ignore = true)

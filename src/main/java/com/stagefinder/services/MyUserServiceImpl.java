@@ -6,6 +6,7 @@ import com.stagefinder.entities.enums.Role;
 import com.stagefinder.map.MyUserMapper;
 import com.stagefinder.dao.MyUserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class MyUserServiceImpl implements MyUserService {
-
+    @Autowired
     private MyUserRepository myUserRepository;
+    @Autowired
     private MyUserMapper myUserMapper;
 //    private CandidatureRepository candidatureRepository;
 //    private MyUserMapper myUserMapper;
